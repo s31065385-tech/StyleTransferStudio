@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Transfer Studio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #10172a, #263b65);
+        }
+        .container {
+            max-width: 850px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.09);
+        }
+        h1 { color: #80f0d0; }
+        .uploads, .previews {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 25px 0;
+        }
+        .item {
+            flex: 1;
+            min-width: 220px;
+        }
+        input {
+            max-width: 100%;
+            margin: 15px 0;
+        }
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #80f0d0;
+            color: #10172a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        img {
+            max-width: 100%;
+            max-height: 350px;
+            margin: 10px;
+            border-radius: 12px;
+        }
+        .message { color: #80f0d0; }
+        .error { color: #ffb4b4; }
+        @media (max-width: 600px) {
+            .container { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Style Transfer Studio</h1>
+    <p>Upload your photo and your favourite outfit.</p>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="uploads">
+            <div class="item">
+                <h3>Your Photo</h3>
+                <input type="file" name="person"
+                       accept="image/png,image/jpeg,image/webp" required>
+            </div>
+            <div class="item">
+                <h3>Outfit Image</h3>
+                <input type="file" name="cloth"
+                       accept="image/png,image/jpeg,image/webp" required>
+            </div>
+        </div>
+        <button type="submit">Generate AI Try-On</button>
+    </form>
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if person_image and cloth_image %}
+        <h2>Uploaded Images</h2>
+        <div class="previews">
+            <div class="item">
+                <h3>Your Photo</h3>
+                <img src="{{ url_for('uploaded_file', filename=person_image) }}"
+                     alt="Your uploaded photo">
+            </div>
+            <div class="item">
+                <h3>Your Outfit</h3>
+                <img src="{{ url_for('uploaded_file', filename=cloth_image) }}"
+                     alt="Your uploaded outfit">
+            </div>
+        </div>
+    {% endif %}
+    {% if result_image %}
+        <h2>AI Try-On Result</h2>
+        <img src="{{ url_for('output_file', filename=result_image) }}"
+             alt="AI generated try-on result">
+        <p>
+            <a href="{{ url_for('output_file', filename=result_image) }}"
+               download style="color:#80f0d0;">
+                Download Your Result
+            </a>
+        </p>
+    {% endif %}
+</div>
+</body>
+</html>
